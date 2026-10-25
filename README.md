@@ -11,6 +11,7 @@ A one-page Astro theme for early-stage AI and developer-tool startups. Motion be
 - **One config file.** All copy, links, and demo content live in [`src/site.config.ts`](src/site.config.ts), typed by [`src/types/config.ts`](src/types/config.ts). Rebranding means editing data, not components.
 - **No framework runtime.** Plain Astro components. The only JavaScript is three small inline scripts: the mobile menu, scroll reveal, and the hero demo.
 - **Fast by default.** Self-hosted fonts with preload, inlined CSS, no external requests. Lighthouse 100 for performance, accessibility, best practices, and SEO on mobile and desktop (Lighthouse 12, measured on a local production build).
+- **No layout shift from web fonts.** Metric-matched fallback faces (`size-adjust`, `ascent-override`, …) keep text in place while the fonts load, so the font swap does not move the page.
 - **Accessible.** Skip link, labelled landmarks, keyboard-friendly menu (Escape closes it), visible focus styles, and `aria-current` on the active nav link.
 - **Respects reduced motion.** With `prefers-reduced-motion`, every animation stops and each visual shows its final state.
 - **Works without JavaScript.** Content never waits on a script; the hero demo renders its finished state as HTML.
