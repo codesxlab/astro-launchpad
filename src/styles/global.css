@@ -1,0 +1,86 @@
+/* Base styles and layout utilities shared by every section. */
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 88px; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 16px/1.6 var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; }
+img, svg { display: block; }
+button { font: inherit; }
+::selection { background: var(--accent); color: #fff; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 8px; }
+main:focus { outline: none; }
+
+.skip-link {
+  position: absolute;
+  top: -80px;
+  left: 16px;
+  z-index: 200;
+  background: var(--ink);
+  color: #fff;
+  padding: 12px 16px;
+  border-radius: 10px;
+}
+.skip-link:focus { top: 12px; }
+
+.wrap { max-width: 1240px; margin-inline: auto; padding-inline: clamp(20px, 4vw, 40px); }
+.nowrap { white-space: nowrap; }
+
+h1, h2, h3 {
+  font-family: var(--display);
+  font-weight: 600;
+  letter-spacing: -.03em;
+  margin: 0;
+  text-wrap: balance;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font: 500 12px/1 var(--mono);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.eyebrow::before { content: ""; width: 7px; height: 7px; border-radius: 2px; background: var(--accent); }
+.h2 { font-size: clamp(34px, 4.4vw, 56px); line-height: 1.04; margin-top: 18px; }
+.lead { font-size: clamp(16px, 1.3vw, 18px); line-height: 1.7; color: var(--muted); max-width: 540px; }
+
+.section { padding: clamp(80px, 10vw, 128px) 0; }
+.section.flush-top { padding-top: 0; }
+
+.actions { display: flex; flex-wrap: wrap; gap: 12px; }
+
+.inline-link {
+  color: var(--accent-strong);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@keyframes blink { 50% { opacity: 0; } }
+
+/*
+ * Reveal on scroll. Only active once JS adds `.js` to <html>, so content
+ * stays visible without JavaScript. Zero specificity (`:where`) lets each
+ * component keep its own hover transform and transition list; the reveal
+ * itself animates `translate`, which never collides with `transform`.
+ */
+:where(.js .reveal) { opacity: 0; translate: 0 18px; transition: opacity .7s ease, translate .7s ease; }
+:where(.js .reveal.in) { opacity: 1; translate: none; }
+
+@media (max-width: 640px) {
+  .actions .btn { width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+  :where(.js .reveal) { opacity: 1; translate: none; }
+}

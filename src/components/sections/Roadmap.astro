@@ -1,0 +1,92 @@
+---
+import site from '../../site.config';
+import { inlineText, pad } from '../../lib/text';
+import SectionHead from '../ui/SectionHead.astro';
+
+const { roadmap } = site;
+// Circumference of the progress ring (r = 18).
+const RING = 113;
+---
+
+<section class="section" id="roadmap" aria-labelledby="roadmap-title">
+  <div class="wrap">
+    <SectionHead heading={roadmap.heading} titleId="roadmap-title" />
+    <div class="b-road reveal">
+      {
+        roadmap.phases.map((phase, i) => (
+          <div class:list={['b-ph', phase.current && 'now']}>
+            <div class="b-top">
+              <span class="b-st">{phase.status}</span>
+              {phase.current ? (
+                <svg
+                  class="b-ring"
+                  viewBox="0 0 44 44"
+                  aria-hidden="true"
+                  style={`--ring-offset:${Math.round(RING * (1 - (phase.progress ?? 0)))}`}
+                >
+                  <circle class="bgc" cx="22" cy="22" r="18" />
+                  <circle class="fg" cx="22" cy="22" r="18" />
+                </svg>
+              ) : (
+                <span class="b-st">{pad(i + 1)}</span>
+              )}
+            </div>
+            <h3>{phase.title}</h3>
+            <p set:html={inlineText(phase.text)} />
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .b-road { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  .b-ph {
+    position: relative;
+    padding: 26px;
+    border-radius: var(--radius);
+    background: var(--surface);
+    border: 1px dashed var(--line2);
+    transition: transform .3s;
+  }
+  .b-ph:hover { transform: translateY(-4px); }
+  .b-top { display: flex; align-items: center; justify-content: space-between; min-height: 44px; margin-bottom: 18px; }
+  .b-st { font: 500 12px var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  .b-ph h3 { font-size: 22px; margin-bottom: 8px; }
+  .b-ph p { margin: 0; font-size: 15px; line-height: 1.7; color: var(--muted); }
+
+  /* Current phase: animated conic border */
+  @property --bang { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+  .b-ph.now {
+    border: 2px solid transparent;
+    background:
+      linear-gradient(var(--surface), var(--surface)) padding-box,
+      conic-gradient(from var(--bang), #3352ff, #c8f56a, #3352ff 40%, #e3e4df 60%, #3352ff) border-box;
+    animation: bspin 4s linear infinite;
+  }
+  @keyframes bspin { to { --bang: 360deg; } }
+  .b-ph.now .b-st { color: var(--accent-strong); }
+
+  .b-ring { width: 44px; height: 44px; }
+  .b-ring circle { fill: none; stroke-width: 4; }
+  .b-ring .bgc { stroke: var(--line); }
+  .b-ring .fg {
+    stroke: var(--accent);
+    stroke-linecap: round;
+    stroke-dasharray: 113;
+    stroke-dashoffset: 113;
+    transform: rotate(-90deg);
+    transform-origin: center;
+    transition: stroke-dashoffset 1.6s ease .3s;
+  }
+  .b-road.in .b-ring .fg { stroke-dashoffset: var(--ring-offset); }
+
+  @media (max-width: 640px) {
+    .b-road { grid-template-columns: 1fr; }
+    .b-ph { padding: 22px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .b-ring .fg { stroke-dashoffset: var(--ring-offset); }
+  }
+</style>

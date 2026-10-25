@@ -1,0 +1,71 @@
+---
+import site from '../../site.config';
+import { splitLastWords } from '../../lib/text';
+
+const { about } = site;
+// Keep the last two words of each title line together.
+const [first, second] = about.title.map((line) => splitLastWords(line));
+---
+
+<section class="section flush-top" id="about" aria-labelledby="about-title">
+  <div class="wrap">
+    <div class="reveal">
+      <span class="eyebrow">{about.eyebrow}</span>
+      <h2 class="h2" id="about-title">
+        {first![0]}<span class="nowrap">{first![1]}</span><br /><span class="accent-line"
+          >{second![0]}<span class="nowrap">{second![1]}</span></span
+        >
+      </h2>
+    </div>
+    <div class="about-grid">
+      <div class="about-copy reveal">
+        {about.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+      </div>
+      <div class="values reveal">
+        {about.values.map((value) => <div><b>{value.label}</b><span>{value.value}</span></div>)}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .accent-line { color: var(--accent-strong); }
+  .about-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    gap: clamp(32px, 6vw, 88px);
+    align-items: start;
+    margin-top: 48px;
+  }
+  .about-copy { max-width: 680px; }
+  .about-copy p { margin: 0 0 20px; font-size: 17px; line-height: 1.75; color: var(--muted); }
+  .about-copy p:first-child {
+    font-size: clamp(20px, 1.8vw, 24px);
+    line-height: 1.5;
+    color: var(--ink);
+    font-weight: 500;
+    letter-spacing: -.01em;
+  }
+  .values { display: grid; gap: 12px; }
+  .values div {
+    padding: 20px 22px;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: var(--surface);
+    transition: transform .3s, border-color .3s, opacity .7s ease, translate .7s ease;
+  }
+  .values div:hover { transform: translateY(-3px); border-color: var(--accent-hover-line); }
+  .values b {
+    display: block;
+    margin-bottom: 6px;
+    font: 600 11px var(--mono);
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--accent-strong);
+  }
+  .values span { font: 600 19px var(--display); letter-spacing: -.02em; }
+
+  @media (max-width: 880px) {
+    .about-grid { grid-template-columns: 1fr; }
+  }
+</style>

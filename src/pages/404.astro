@@ -1,0 +1,67 @@
+---
+import site from '../site.config';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/sections/Header.astro';
+import Footer from '../components/sections/Footer.astro';
+import Button from '../components/ui/Button.astro';
+import Icon from '../components/ui/Icon.astro';
+
+const { notFound, nav } = site;
+// Every section of the home page, so a lost visitor is one click from content.
+const sections = nav.links.map((link) => ({ ...link, href: `/${link.href}` }));
+---
+
+<BaseLayout title={`${notFound.title} - ${site.name}`} description={notFound.text} noindex>
+  <Header onHome={false} />
+  <main id="main" tabindex="-1">
+    <section class="section not-found" aria-labelledby="not-found-title">
+      <div class="wrap">
+        <span class="eyebrow">404</span>
+        <h1 class="h2" id="not-found-title">{notFound.title}</h1>
+        <p class="lead">{notFound.text}</p>
+        <div class="actions">
+          <Button href="/" icon="arrow">{notFound.homeLabel}</Button>
+        </div>
+        <ul class="nf-links">
+          {
+            sections.map((link) => (
+              <li>
+                <a href={link.href}>{link.label} <Icon name="arrow" /></a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+  </main>
+  <div class="wrap">
+    <Footer onHome={false} />
+  </div>
+</BaseLayout>
+
+<style>
+  .not-found .lead { margin: 18px 0 32px; }
+  .nf-links {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 12px;
+    margin: 48px 0 0;
+    padding: 0;
+  }
+  .nf-links a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 18px 20px;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: var(--surface);
+    font: 600 17px var(--display);
+    letter-spacing: -.02em;
+    transition: transform .3s, border-color .3s;
+  }
+  .nf-links a:hover { transform: translateY(-3px); border-color: var(--accent-hover-line); }
+  .nf-links :global(svg) { width: 16px; height: 16px; color: var(--accent-strong); }
+</style>

@@ -1,0 +1,109 @@
+---
+import type { OssSpotlightConfig } from '../../types/config';
+import { linkAttrs } from '../../lib/text';
+import Icon from '../ui/Icon.astro';
+import TerminalLines from '../ui/TerminalLines.astro';
+
+interface Props {
+  project: OssSpotlightConfig;
+}
+
+const { project } = Astro.props;
+---
+
+<a class="oss reveal" href={project.href} {...linkAttrs(project.href)}>
+  <div class="oss-copy">
+    <span class="oss-tag"><Icon name="github" class="gh" />{project.tag}</span>
+    <h3>{project.title}</h3>
+    <p>{project.text}</p>
+    <div class="oss-chips">{project.chips.map((chip) => <span>{chip}</span>)}</div>
+    <span class="oss-cta">{project.cta} <Icon name="arrow" /></span>
+  </div>
+  <div class="oss-term" aria-hidden="true">
+    <div class="oss-term-top"><i></i><i></i><i></i><span>{project.terminal.title}</span></div>
+    <div class="oss-term-body">
+      <TerminalLines lines={project.terminal.lines} />
+    </div>
+  </div>
+</a>
+
+<style>
+  .oss {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr);
+    gap: clamp(24px, 4vw, 48px);
+    align-items: center;
+    margin-bottom: 18px;
+    padding: clamp(24px, 3.5vw, 40px);
+    border-radius: var(--radius);
+    background: var(--dark);
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+    transition: transform .3s, box-shadow .3s, opacity .7s ease, translate .7s ease;
+  }
+  .oss::before {
+    content: "";
+    position: absolute;
+    width: 520px;
+    height: 520px;
+    right: -160px;
+    top: -220px;
+    background: radial-gradient(circle, rgba(51, 82, 255, .28), transparent 65%);
+    pointer-events: none;
+  }
+  .oss > * { position: relative; }
+  .oss:hover { transform: translateY(-4px); box-shadow: 0 30px 60px -36px rgba(13, 16, 23, .6); }
+
+  .oss-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgba(200, 245, 106, .12);
+    border: 1px solid rgba(200, 245, 106, .35);
+    color: var(--lime);
+    font: 500 12px var(--mono);
+    letter-spacing: .04em;
+  }
+  .oss-tag :global(.gh) { width: 14px; height: 14px; flex-shrink: 0; }
+  .oss h3 { font-size: clamp(30px, 3.4vw, 42px); margin: 16px 0 10px; }
+  .oss p { margin: 0 0 18px; font-size: 15.5px; line-height: 1.7; color: var(--dark-muted); max-width: 520px; }
+  .oss-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 22px; }
+  .oss-chips span {
+    font: 500 12px var(--mono);
+    padding: 6px 10px;
+    border-radius: 8px;
+    background: var(--dark2);
+    color: #d8deea;
+    border: 1px solid var(--dark-line);
+  }
+  .oss-cta { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; font-size: 15px; color: var(--lime); }
+  .oss-cta :global(svg) { width: 16px; height: 16px; transition: transform .2s; }
+  .oss:hover .oss-cta :global(svg) { transform: translateX(4px); }
+
+  .oss-term {
+    background: #0f131b;
+    border: 1px solid #2a3243;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 30px 60px -30px rgba(0, 0, 0, .7);
+  }
+  .oss-term-top {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 11px 14px;
+    border-bottom: 1px solid #222a39;
+    font: 500 11px var(--mono);
+    color: #8e98ab;
+  }
+  .oss-term-top i { width: 9px; height: 9px; border-radius: 50%; background: #2b3342; }
+  .oss-term-top span { margin-left: auto; }
+  .oss-term-body { padding: 16px 18px 18px; font: 12.5px/1.95 var(--mono); color: #dce2ec; overflow-wrap: anywhere; }
+
+  @media (max-width: 880px) {
+    .oss { grid-template-columns: 1fr; }
+  }
+</style>

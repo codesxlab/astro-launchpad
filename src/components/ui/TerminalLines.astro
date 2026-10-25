@@ -1,0 +1,52 @@
+---
+import type { TerminalLine } from '../../types/config';
+
+interface Props {
+  lines: TerminalLine[];
+}
+
+const { lines } = Astro.props;
+---
+
+{
+  lines.map((line) => {
+    switch (line.type) {
+      case 'command':
+        return (
+          <div>
+            <span class="g">$</span> {line.bin && <Fragment><span class="b">{line.bin}</span> </Fragment>}{line.args}
+            {line.cursor && <Fragment> <span class="cursor" /></Fragment>}
+          </div>
+        );
+      case 'output':
+        return <div class="g">{line.text}</div>;
+      case 'success':
+        return <div><span class="ok">✓</span> {line.text}</div>;
+      case 'warning':
+        return <div><span class="w">!</span> {line.text}</div>;
+      case 'progress':
+        return <div class="bar" />;
+    }
+  })
+}
+
+<style>
+  .g { color: #6f7a8e; }
+  .b { color: #a9bdff; }
+  .ok { color: var(--lime); }
+  .w { color: #ffc27a; }
+  .bar {
+    height: 6px;
+    margin: 12px 0 10px;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--accent) 0 76%, #273046 76% 100%);
+  }
+  .cursor {
+    display: inline-block;
+    width: 7px;
+    height: 14px;
+    vertical-align: -2px;
+    background: var(--lime);
+    animation: blink 1.1s steps(1) infinite;
+  }
+</style>

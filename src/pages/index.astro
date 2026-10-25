@@ -1,0 +1,31 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/sections/Header.astro';
+import Hero from '../components/sections/Hero.astro';
+import FocusStrip from '../components/sections/FocusStrip.astro';
+import Expertise from '../components/sections/Expertise.astro';
+import AiBento from '../components/sections/AiBento.astro';
+import Lab from '../components/sections/Lab.astro';
+import Approach from '../components/sections/Approach.astro';
+import Roadmap from '../components/sections/Roadmap.astro';
+import About from '../components/sections/About.astro';
+import Contact from '../components/sections/Contact.astro';
+import Footer from '../components/sections/Footer.astro';
+---
+
+<BaseLayout>
+  <Header />
+  <main id="main" tabindex="-1">
+    <Hero />
+    <FocusStrip />
+    <Expertise />
+    <AiBento />
+    <Lab />
+    <Approach />
+    <Roadmap />
+    <About />
+    <Contact>
+      <Footer />
+    </Contact>
+  </main>
+</BaseLayout>

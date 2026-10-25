@@ -1,0 +1,44 @@
+---
+import site from '../../site.config';
+import { pad } from '../../lib/text';
+
+const { focus } = site;
+---
+
+<div class="strip">
+  <div class="wrap strip-inner">
+    <span class="strip-label">{focus.label}</span>
+    <div class="strip-items">
+      {focus.items.map((item, i) => <span><b>{pad(i + 1)}</b>{item}</span>)}
+    </div>
+  </div>
+</div>
+
+<style>
+  .strip { border-block: 1px solid var(--line); background: var(--surface); }
+  .strip-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 14px 24px;
+    padding-block: 20px;
+  }
+  .strip-label { font: 500 12px var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  .strip-items { display: flex; flex-wrap: wrap; gap: 10px; }
+  .strip-items span {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .strip-items b { font: 600 11px var(--mono); color: var(--accent-strong); }
+
+  @media (max-width: 640px) {
+    .strip-inner { flex-direction: column; align-items: flex-start; }
+  }
+</style>

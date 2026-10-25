@@ -1,0 +1,82 @@
+---
+import site from '../../site.config';
+import { pad } from '../../lib/text';
+import Card from '../ui/Card.astro';
+import Icon from '../ui/Icon.astro';
+import SectionHead from '../ui/SectionHead.astro';
+
+const { expertise } = site;
+const total = pad(expertise.cards.length);
+---
+
+<section class="section" id="expertise" aria-labelledby="expertise-title">
+  <div class="wrap">
+    <SectionHead heading={expertise.heading} titleId="expertise-title" />
+    <div class="bento">
+      {
+        expertise.cards.map((card, i) => (
+          <Card
+            title={card.title}
+            text={card.text}
+            icon={card.icon}
+            index={`${pad(i + 1)} / ${total}`}
+            tags={card.tags}
+            variant={card.featured ? 'feature' : 'default'}
+            span={card.span}
+          >
+            {card.flow && (
+              <div class="mini-flow" aria-hidden="true">
+                {card.flow.map((step, j) => (
+                  <Fragment>
+                    {j > 0 && <i />}
+                    <span class:list={[step === card.flowActive && 'on']}>{step}</span>
+                  </Fragment>
+                ))}
+              </div>
+            )}
+          </Card>
+        ))
+      }
+      <Card
+        title={expertise.callout.title}
+        text={expertise.callout.text}
+        variant="callout"
+        span={expertise.callout.span}
+      >
+        <a class="text-link" href={expertise.callout.link.href}>{expertise.callout.link.label} <Icon name="arrow" /></a>
+      </Card>
+    </div>
+  </div>
+</section>
+
+<style>
+  .bento { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+
+  .mini-flow {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0 0 24px;
+    padding: 16px;
+    border: 1px solid var(--dark-line);
+    border-radius: 14px;
+    background: var(--dark2);
+    font: 500 12px var(--mono);
+  }
+  .mini-flow span { padding: 6px 10px; border-radius: 8px; background: #1c2331; color: #dfe5f1; }
+  .mini-flow span.on { background: var(--accent); color: #fff; }
+  .mini-flow i { width: 14px; height: 1px; background: #4a5466; }
+
+  .text-link { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; font-size: 15px; color: var(--accent-strong); }
+  .text-link :global(svg) { width: 16px; height: 16px; transition: transform .2s; }
+  .text-link:hover :global(svg) { transform: translateX(4px); }
+
+  @media (max-width: 1060px) {
+    .bento { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 640px) {
+    .bento { grid-template-columns: 1fr; }
+    .mini-flow i { display: none; }
+  }
+</style>

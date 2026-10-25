@@ -1,0 +1,87 @@
+---
+import type { IconName } from '../../types/config';
+import Icon from './Icon.astro';
+
+interface Props {
+  title: string;
+  text: string;
+  icon?: IconName;
+  /** Small counter in the top-right corner, e.g. `01 / 03`. */
+  index?: string;
+  tags?: string[];
+  variant?: 'default' | 'feature' | 'callout';
+  span?: 1 | 2;
+}
+
+const { title, text, icon, index, tags = [], variant = 'default', span = 1 } = Astro.props;
+---
+
+<article class:list={['card', variant !== 'default' && variant, span === 2 && 'span-2', 'reveal']}>
+  {
+    (icon || index) && (
+      <div class="card-top">
+        {icon && <span class="card-icon"><Icon name={icon} /></span>}
+        {index && <span class="card-no">{index}</span>}
+      </div>
+    )
+  }
+  <h3>{title}</h3>
+  <p>{text}</p>
+  <slot />
+  {tags.length > 0 && <div class="tags">{tags.map((tag) => <span>{tag}</span>)}</div>}
+</article>
+
+<style>
+  .card {
+    display: flex;
+    flex-direction: column;
+    padding: 30px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    transition: transform .25s, box-shadow .25s, border-color .25s, opacity .7s ease, translate .7s ease;
+  }
+  .card:hover {
+    transform: translateY(-4px);
+    border-color: var(--line2);
+    box-shadow: 0 28px 56px -32px rgba(13, 16, 23, .32);
+  }
+  .span-2 { grid-column: span 2; }
+
+  .card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 26px; }
+  .card-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 14px;
+    display: grid;
+    place-items: center;
+    background: var(--accent-soft);
+    color: var(--accent-strong);
+    transition: transform .3s, background .3s, color .3s;
+  }
+  .card-icon :global(svg) { width: 24px; height: 24px; }
+  .card:hover .card-icon { transform: rotate(-6deg); }
+  .card-no { font: 500 12px var(--mono); color: var(--muted); }
+
+  .card h3 { font-size: clamp(24px, 2.2vw, 30px); margin-bottom: 10px; }
+  .card p { font-size: 15px; line-height: 1.7; color: var(--muted); margin: 0 0 22px; max-width: 540px; }
+
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; }
+  .tags span { font: 500 12px var(--mono); padding: 6px 10px; border-radius: 8px; background: var(--bg); color: var(--ink2); }
+
+  /* Dark, highlighted card */
+  .card.feature { background: var(--dark); border-color: var(--dark); color: #fff; }
+  .card.feature .card-icon { background: var(--accent); color: #fff; }
+  .card.feature .card-no, .card.feature p { color: var(--dark-muted); }
+  .card.feature .tags span { background: var(--dark2); color: #d8deea; }
+
+  /* Soft accent card with a link */
+  .card.callout { background: var(--accent-soft); border-color: var(--accent-line); justify-content: center; }
+  .card.callout h3 { max-width: 520px; }
+  .card.callout p { color: var(--ink2); }
+
+  @media (max-width: 640px) {
+    .span-2 { grid-column: auto; }
+    .card { padding: 24px; }
+  }
+</style>

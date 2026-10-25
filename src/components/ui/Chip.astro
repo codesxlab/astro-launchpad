@@ -1,0 +1,26 @@
+---
+interface Props {
+  tone?: 'neutral' | 'blue' | 'green' | 'amber';
+  class?: string;
+}
+
+const { tone = 'neutral', class: className } = Astro.props;
+---
+
+<span class:list={['chip', tone !== 'neutral' && tone, className]}><slot /></span>
+
+<style>
+  .chip {
+    display: inline-block;
+    font: 500 11px var(--mono);
+    padding: 5px 9px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: var(--bg);
+    color: var(--ink2);
+    white-space: nowrap;
+  }
+  .chip.blue { background: var(--accent-soft); border-color: var(--accent-line); color: var(--accent-strong); }
+  .chip.green { background: #eaf7df; border-color: #d0eabb; color: #2c6610; }
+  .chip.amber { background: #fff4dc; border-color: #f3dfae; color: #7a5200; }
+</style>

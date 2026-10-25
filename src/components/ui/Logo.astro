@@ -1,0 +1,50 @@
+---
+import site from '../../site.config';
+
+interface Props {
+  href?: string;
+  class?: string;
+}
+
+const { href = '#top', class: className } = Astro.props;
+const highlight = site.nameHighlight;
+const at = highlight ? site.name.indexOf(highlight) : -1;
+---
+
+<a class:list={['logo', className]} href={href} aria-label={`${site.name}, ${site.a11y.backToTop}`}>
+  <span class="logo-glyph" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="m8 5-5 7 5 7m8-14 5 7-5 7" stroke="#fff"></path>
+      <path d="m14 4-4 16" stroke="#3352ff"></path>
+    </svg>
+  </span>
+  {
+    at >= 0 && highlight ? (
+      <span>{site.name.slice(0, at)}<span class="x">{highlight}</span>{site.name.slice(at + highlight.length)}</span>
+    ) : (
+      <span>{site.name}</span>
+    )
+  }
+</a>
+
+<style>
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font: 700 21px var(--display);
+    letter-spacing: -.035em;
+    white-space: nowrap;
+  }
+  .logo-glyph {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: var(--ink);
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+  }
+  .logo-glyph svg { width: 20px; height: 20px; }
+  .x { color: var(--accent); }
+</style>

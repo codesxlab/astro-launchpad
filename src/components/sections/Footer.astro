@@ -1,0 +1,52 @@
+---
+import site from '../../site.config';
+import { linkAttrs, resolveHref } from '../../lib/text';
+import Logo from '../ui/Logo.astro';
+
+interface Props {
+  onHome?: boolean;
+}
+
+const { onHome = true } = Astro.props;
+const { footer, a11y } = site;
+// Rendered at build time; the script below keeps it current on old builds.
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <Logo href={onHome ? '#top' : '/'} />
+  <span>© <span id="year">{year}</span> {site.name} · {footer.tagline}</span>
+  <nav class="footer-links" aria-label={a11y.footerNav}>
+    {
+      footer.links.map((link) => {
+        const href = resolveHref(link.href, onHome);
+        return <a href={href} {...linkAttrs(href)}>{link.label}</a>;
+      })
+    }
+    <a href={onHome ? '#top' : '/'}>{footer.backToTop}</a>
+  </nav>
+</footer>
+
+<script>
+  const year = document.getElementById('year');
+  if (year) year.textContent = String(new Date().getFullYear());
+</script>
+
+<style>
+  .footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px 28px;
+    padding: 30px 0 26px;
+    font-size: 14px;
+    color: var(--muted);
+  }
+  .footer :global(.logo) { font-size: 18px; color: var(--ink); }
+  .footer :global(.logo-glyph) { width: 28px; height: 28px; border-radius: 8px; }
+  .footer :global(.logo-glyph svg) { width: 16px; height: 16px; }
+  .footer-links { display: flex; flex-wrap: wrap; gap: 8px 24px; }
+  .footer-links a { color: var(--ink2); font-weight: 500; }
+  .footer-links a:hover { color: var(--accent-strong); }
+</style>

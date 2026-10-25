@@ -1,0 +1,34 @@
+---
+import site from '../../site.config';
+import SectionHead from '../ui/SectionHead.astro';
+import ConceptCard from './ConceptCard.astro';
+import OssSpotlight from './OssSpotlight.astro';
+
+const { lab } = site;
+---
+
+<section class="section flush-top" id="lab" aria-labelledby="work-title">
+  <div class="wrap">
+    <SectionHead heading={lab.heading} titleId="work-title" />
+    {lab.spotlight && <OssSpotlight project={lab.spotlight} />}
+    {
+      lab.concepts.length > 0 && (
+        <div class="work-grid">
+          {lab.concepts.map((concept) => (
+            <ConceptCard concept={concept} />
+          ))}
+        </div>
+      )
+    }
+    {lab.note && <p class="concept-note">{lab.note}</p>}
+  </div>
+</section>
+
+<style>
+  .work-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+  .concept-note { margin: 20px 0 0; font: 12px/1.6 var(--mono); color: var(--muted); }
+
+  @media (max-width: 880px) {
+    .work-grid { grid-template-columns: 1fr; }
+  }
+</style>

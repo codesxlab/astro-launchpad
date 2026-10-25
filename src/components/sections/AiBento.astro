@@ -1,0 +1,286 @@
+---
+import site from '../../site.config';
+import Icon from '../ui/Icon.astro';
+import SectionHead from '../ui/SectionHead.astro';
+
+const { ai } = site;
+const [sampleKey, sampleValue] = ai.structured.sample;
+// The typing animation reveals the value character by character.
+const typeWidth = `${sampleValue.length + 2}ch`;
+const lanes = [
+  { id: 'bp1', d: 'M120 110 C 180 110, 200 40, 260 40', begin: undefined },
+  { id: 'bp2', d: 'M120 110 L 260 110', begin: '2s' },
+  { id: 'bp3', d: 'M120 110 C 180 110, 200 180, 260 180', begin: '4s' },
+];
+const boxes = [
+  { y: 20, cls: 'b-mb' },
+  { y: 90, cls: 'b-mb b-mb2' },
+  { y: 160, cls: 'b-mb b-mb3' },
+];
+---
+
+<section class="section ai-section" id="ai" aria-labelledby="ai-title">
+  <div class="wrap">
+    <SectionHead heading={ai.heading} titleId="ai-title" />
+    <div class="b-bento">
+      <div class="b-cell b-big reveal">
+        <h3>{ai.router.title}</h3>
+        <p>{ai.router.text}</p>
+        <svg class="b-router" viewBox="0 0 420 220" aria-hidden="true">
+          <rect class="b-box" x="10" y="90" width="110" height="40" rx="10"></rect>
+          <text x="30" y="115">{ai.router.source}</text>
+          {lanes.map((lane) => <path id={lane.id} class="b-lane" d={lane.d} />)}
+          {
+            boxes.map((box, i) => (
+              <Fragment>
+                <rect class={`b-box ${box.cls}`} x="260" y={box.y} width="150" height="40" rx="10" />
+                <text x="280" y={box.y + 25}>{ai.router.targets[i]}</text>
+              </Fragment>
+            ))
+          }
+          {
+            lanes.map((lane, i) => (
+              <circle r="5" fill="#c8f56a" opacity={i > 0 ? '0' : undefined}>
+                <animateMotion
+                  dur="6s"
+                  begin={lane.begin}
+                  repeatCount="indefinite"
+                  keyPoints="0;1;1"
+                  keyTimes="0;.14;1"
+                  calcMode="linear"
+                >
+                  <mpath href={`#${lane.id}`} />
+                </animateMotion>
+                <animate
+                  attributeName="opacity"
+                  values="1;1;0;0"
+                  keyTimes="0;.14;.15;1"
+                  dur="6s"
+                  begin={lane.begin}
+                  repeatCount="indefinite"
+                />
+              </circle>
+            ))
+          }
+        </svg>
+      </div>
+      <div class="b-cell b-wide reveal">
+        <h3>{ai.structured.title}</h3>
+        <p>{ai.structured.text}</p>
+        <div class="b-vis">
+          <div class="b-json" aria-hidden="true" style={`--type-width:${typeWidth}`}>
+            {'{'} <span class="k">"{sampleKey}"</span>: <span class="v b-type">"{sampleValue}"</span><span
+              class="b-cur"></span>
+            {'}'}
+          </div>
+        </div>
+      </div>
+      <div class="b-cell reveal">
+        <h3>{ai.approval.title}</h3>
+        <p>{ai.approval.text}</p>
+        <div class="b-vis b-switch" aria-hidden="true">
+          <span class="b-sw"></span>
+          <span class="b-lbl"><span class="b-l1">{ai.approval.pending}</span><span class="b-l2">{ai.approval.approved}</span></span>
+        </div>
+      </div>
+      <div class="b-cell reveal">
+        <h3>{ai.evaluated.title}</h3>
+        <p>{ai.evaluated.text}</p>
+        <div class="b-vis" aria-hidden="true">
+          <svg class="b-spark" viewBox="0 0 200 70" preserveAspectRatio="none">
+            <path d="M4 60 L40 48 L70 52 L100 34 L130 38 L160 18 L196 10"></path>
+          </svg>
+        </div>
+      </div>
+    </div>
+    <div class="b-uses">
+      {
+        ai.uses.map((use) => (
+          <div class="b-use reveal">
+            <span class="b-bi"><Icon name={use.icon} class="b-ic" /></span>
+            <h3>{use.title}</h3>
+            <p>{use.text}</p>
+          </div>
+        ))
+      }
+    </div>
+    <p class="b-note reveal">{ai.note}</p>
+  </div>
+</section>
+
+<style>
+  .ai-section { padding-top: 0; }
+  .b-bento { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: minmax(200px, auto); gap: 16px; }
+  .b-cell {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: transform .3s, box-shadow .3s, border-color .3s, opacity .7s ease, translate .7s ease;
+  }
+  .b-cell:hover { transform: translateY(-4px); border-color: var(--line2); box-shadow: 0 26px 50px -34px rgba(13, 16, 23, .4); }
+  .b-cell h3, .b-use h3 { font-size: 19px; margin-bottom: 4px; }
+  .b-cell p { font-size: 14.5px; line-height: 1.6; color: var(--muted); margin: 0; }
+  .b-vis { margin-top: auto; padding-top: 18px; }
+
+  /* Model router */
+  .b-big { grid-column: span 2; grid-row: span 2; background: var(--dark); border-color: var(--dark); color: #fff; }
+  .b-big:hover { border-color: var(--dark); }
+  .b-big p { color: var(--dark-muted); }
+  .b-router { width: 100%; height: auto; margin-top: auto; padding-top: 12px; }
+  .b-lane { fill: none; stroke: #2b3446; stroke-width: 2; stroke-dasharray: 4 6; }
+  .b-box { fill: #141a26; stroke: #2b3446; stroke-width: 1.5; }
+  .b-router text { font: 500 13px var(--mono); fill: #c9d1e0; }
+  .b-mb { animation: bmb 6s infinite; }
+  .b-mb2 { animation-delay: 2s; }
+  .b-mb3 { animation-delay: 4s; }
+  @keyframes bmb {
+    0%, 8% { fill: #141a26; stroke: #2b3446; }
+    14%, 30% { fill: #2036d1; stroke: #3352ff; }
+    36%, 100% { fill: #141a26; stroke: #2b3446; }
+  }
+
+  /* Structured output typing */
+  .b-wide { grid-column: span 2; }
+  .b-json {
+    font: 12.5px/1.8 var(--mono);
+    background: var(--dark);
+    color: #d3d9e6;
+    border-radius: 12px;
+    padding: 12px 14px;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  .b-json .k { color: #a9bdff; }
+  .b-json .v { color: var(--lime); }
+  .b-cur {
+    display: inline-block;
+    width: 7px;
+    height: 13px;
+    margin-left: 1px;
+    background: var(--lime);
+    vertical-align: -2px;
+    animation: blink 1s steps(1) infinite;
+  }
+  .b-type {
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    vertical-align: bottom;
+    width: 0;
+    animation: btype 5s steps(20) infinite;
+  }
+  @keyframes btype {
+    0% { width: 0; }
+    40%, 100% { width: var(--type-width, 20ch); }
+  }
+
+  /* Approval switch */
+  .b-switch { display: flex; align-items: center; gap: 12px; font: 600 13px var(--mono); }
+  .b-sw { flex-shrink: 0; width: 52px; height: 30px; border-radius: 999px; background: #e1e3dc; position: relative; animation: bswbg 4s infinite; }
+  .b-sw::after {
+    content: "";
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, .2);
+    animation: bswk 4s infinite;
+  }
+  @keyframes bswbg {
+    0%, 45% { background: #e1e3dc; }
+    55%, 95% { background: var(--success); }
+    100% { background: #e1e3dc; }
+  }
+  @keyframes bswk {
+    0%, 45% { transform: none; }
+    55%, 95% { transform: translateX(22px); }
+    100% { transform: none; }
+  }
+  .b-lbl { position: relative; height: 18px; width: 120px; }
+  .b-lbl span { position: absolute; inset: 0; }
+  .b-l1 { color: #a16207; animation: bsw1 4s infinite; }
+  .b-l2 { color: #2c6610; opacity: 0; animation: bsw2 4s infinite; }
+  @keyframes bsw1 {
+    0%, 50% { opacity: 1; }
+    52%, 96% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+  @keyframes bsw2 {
+    0%, 50% { opacity: 0; }
+    52%, 96% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+
+  /* Evaluation sparkline */
+  .b-spark { width: 100%; height: 70px; }
+  .b-spark path {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-dasharray: 300;
+    stroke-dashoffset: 300;
+    animation: bspark 4s ease-in-out infinite;
+  }
+  @keyframes bspark {
+    0% { stroke-dashoffset: 300; }
+    50%, 85% { stroke-dashoffset: 0; }
+    100% { stroke-dashoffset: -300; }
+  }
+
+  /* Planned use cases */
+  .b-uses { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-top: 16px; }
+  .b-use {
+    padding: 22px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    transition: transform .3s, border-color .3s, opacity .7s ease, translate .7s ease;
+  }
+  .b-use:hover { transform: translateY(-4px); border-color: var(--accent-hover-line); }
+  .b-bi {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    margin-bottom: 16px;
+    background: var(--accent-soft);
+    color: var(--accent-strong);
+    transition: background .3s, color .3s, transform .3s;
+  }
+  .b-bi :global(.b-ic) { width: 20px; height: 20px; }
+  .b-use:hover .b-bi { background: var(--accent); color: #fff; transform: rotate(-6deg); }
+  .b-use h3 { font-size: 16.5px; margin-bottom: 6px; }
+  .b-use p { margin: 0; font-size: 14px; line-height: 1.6; color: var(--muted); }
+  .b-note { margin: 20px 0 0; font-size: 14.5px; color: var(--muted); }
+
+  @media (max-width: 1060px) {
+    .b-bento, .b-uses { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 640px) {
+    .b-bento, .b-uses { grid-template-columns: 1fr; }
+    .b-big, .b-wide { grid-column: auto; }
+    .b-big { grid-row: auto; }
+    .b-cell { padding: 22px; }
+  }
+  @media (max-width: 380px) {
+    .b-json { font-size: 11px; padding: 10px 12px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .b-type { width: var(--type-width, 20ch); }
+    .b-spark path { stroke-dashoffset: 0; }
+    .b-l1 { opacity: 0; }
+    .b-l2 { opacity: 1; }
+    .b-sw { background: var(--success); }
+    .b-sw::after { transform: translateX(22px); }
+  }
+</style>

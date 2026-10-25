@@ -1,0 +1,59 @@
+/* Design tokens. Change these to re-skin the whole theme. */
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("/fonts/inter.woff2") format("woff2");
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url("/fonts/jetbrains-mono.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Space Grotesk";
+  font-style: normal;
+  font-weight: 500 700;
+  font-display: swap;
+  src: url("/fonts/space-grotesk.woff2") format("woff2");
+}
+
+:root {
+  /* Surfaces & text */
+  --bg: #f6f6f3;
+  --surface: #fff;
+  --ink: #0d1017;
+  --ink2: #2b303b;
+  --muted: #565d6b;
+  --line: #e3e4df;
+  --line2: #d0d2cb;
+
+  /* Brand */
+  --accent: #3352ff;
+  --accent-strong: #2036d1;
+  --accent-soft: #eaedff;
+  --accent-line: #d4daff;
+  --accent-hover-line: #c9d1ff;
+  --lime: #c8f56a;
+
+  /* Dark sections */
+  --dark: #0b0e14;
+  --dark2: #131823;
+  --dark-line: #262d3b;
+  --dark-muted: #a3abbc;
+
+  /* Status */
+  --success: #2fb344;
+
+  /* Shape */
+  --radius: 20px;
+
+  /* Type */
+  --sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+  --display: "Space Grotesk", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+}

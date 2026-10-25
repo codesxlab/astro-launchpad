@@ -1,0 +1,51 @@
+---
+import type { Action, IconName } from '../../types/config';
+import { linkAttrs } from '../../lib/text';
+import Icon from './Icon.astro';
+
+interface Props {
+  href: string;
+  variant?: Action['variant'];
+  /** `arrow` trails the label; any other icon leads it. */
+  icon?: IconName;
+  class?: string;
+}
+
+const { href, variant = 'primary', icon, class: className } = Astro.props;
+const trailing = icon === 'arrow';
+---
+
+<a class:list={['btn', `btn-${variant}`, className]} href={href} {...linkAttrs(href)}>
+  {icon && !trailing && <Icon name={icon} class={icon === 'github' ? 'gh' : undefined} />}
+  <slot />
+  {trailing && <Icon name="arrow" />}
+</a>
+
+<style>
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    height: 52px;
+    padding: 0 24px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 15px;
+    transition: background .2s, color .2s, border-color .2s, transform .2s;
+  }
+  .btn :global(svg) { width: 17px; height: 17px; transition: transform .2s; }
+  .btn:hover :global(svg) { transform: translateX(3px); }
+  .btn:active { transform: scale(.98); }
+  .btn :global(.gh) { transition: none; }
+  .btn:hover :global(.gh) { transform: none; }
+
+  .btn-primary { background: var(--ink); color: #fff; }
+  .btn-primary:hover { background: var(--accent-strong); }
+  .btn-ghost { background: var(--surface); border: 1px solid var(--line2); color: var(--ink); }
+  .btn-ghost:hover { border-color: var(--ink); }
+  .btn-light { background: #fff; color: var(--ink); }
+  .btn-light:hover { background: var(--lime); }
+  .btn-outline-light { border: 1px solid rgba(255, 255, 255, .55); color: #fff; }
+  .btn-outline-light:hover { background: rgba(255, 255, 255, .12); }
+</style>

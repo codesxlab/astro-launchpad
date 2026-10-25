@@ -1,0 +1,34 @@
+---
+import type { SectionHeading } from '../../types/config';
+
+interface Props {
+  heading: SectionHeading;
+  /** id of the <h2>, referenced by the section's aria-labelledby. */
+  titleId: string;
+}
+
+const { heading, titleId } = Astro.props;
+---
+
+<div class="section-head reveal">
+  <div>
+    <span class="eyebrow">{heading.eyebrow}</span>
+    <h2 class="h2" id={titleId}>{heading.title}</h2>
+  </div>
+  <p class="lead">{heading.lead}</p>
+</div>
+
+<style>
+  .section-head {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    gap: 24px 48px;
+    align-items: end;
+    margin-bottom: 52px;
+  }
+  .section-head .lead { margin: 0; }
+
+  @media (max-width: 1060px) {
+    .section-head { grid-template-columns: 1fr; }
+  }
+</style>

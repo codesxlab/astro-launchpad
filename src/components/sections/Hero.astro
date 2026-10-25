@@ -1,0 +1,141 @@
+---
+import site from '../../site.config';
+import Button from '../ui/Button.astro';
+import Icon from '../ui/Icon.astro';
+import WorkflowDemo from './WorkflowDemo.astro';
+
+const { hero } = site;
+const lines = hero.title.lines;
+---
+
+<section class="hero" aria-label={site.a11y.hero}>
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <span class="status">
+        <span class="pulse" aria-hidden="true"></span>{hero.status.text}{
+          hero.status.extra && <span class="hide-sm">&nbsp;{hero.status.extra}</span>
+        }
+      </span>
+      <h1>
+        {
+          lines.map((line, i) =>
+            i < lines.length - 1 ? (
+              <Fragment>{line}<br /></Fragment>
+            ) : (
+              <Fragment>{line}{' '}<span class="accent">{hero.title.accent}</span></Fragment>
+            ),
+          )
+        }
+      </h1>
+      <p class="hero-desc">{hero.description}</p>
+      <div class="actions">
+        {
+          hero.actions.map((action) => (
+            <Button href={action.href} variant={action.variant} icon={action.icon}>{action.label}</Button>
+          ))
+        }
+      </div>
+      <ul class="hero-points">
+        {hero.points.map((point) => <li><Icon name="check-circle" />{point}</li>)}
+      </ul>
+    </div>
+
+    <div class="hero-visual">
+      <WorkflowDemo demo={hero.demo} />
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero { position: relative; overflow: hidden; padding: clamp(56px, 7vw, 96px) 0 clamp(56px, 7vw, 92px); }
+  .hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle at 1px 1px, #c5c8c0 1px, transparent 0);
+    background-size: 24px 24px;
+    -webkit-mask-image: radial-gradient(ellipse 75% 70% at 72% 35%, #000 25%, transparent 72%);
+    mask-image: radial-gradient(ellipse 75% 70% at 72% 35%, #000 25%, transparent 72%);
+    pointer-events: none;
+  }
+  .hero::after {
+    content: "";
+    position: absolute;
+    width: 720px;
+    height: 720px;
+    right: -180px;
+    top: -240px;
+    background: radial-gradient(circle, rgba(51, 82, 255, .18), transparent 64%);
+    pointer-events: none;
+    animation: drift 14s ease-in-out infinite alternate;
+  }
+  @keyframes drift { to { transform: translate(-60px, 50px) scale(1.08); } }
+
+  .hero-grid {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(40px, 5vw, 72px);
+    align-items: center;
+  }
+
+  .status {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 14px 7px 12px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--surface);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink2);
+    box-shadow: 0 1px 2px rgba(13, 16, 23, .04);
+  }
+  .pulse { position: relative; width: 8px; height: 8px; border-radius: 50%; background: var(--success); flex-shrink: 0; }
+  .pulse::after {
+    content: "";
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 2px solid var(--success);
+    opacity: 0;
+    animation: pulse 2.2s ease-out infinite;
+  }
+  @keyframes pulse {
+    0% { transform: scale(.5); opacity: .7; }
+    100% { transform: scale(1.4); opacity: 0; }
+  }
+
+  h1 { font-size: clamp(50px, 6.4vw, 92px); line-height: .98; letter-spacing: -.045em; margin: 26px 0 24px; }
+  .accent {
+    color: var(--accent);
+    white-space: nowrap;
+    background: linear-gradient(transparent 70%, var(--lime) 70% 90%, transparent 90%);
+  }
+  .hero-desc { font-size: clamp(17px, 1.4vw, 19px); line-height: 1.7; color: var(--muted); max-width: 530px; margin: 0 0 34px; }
+
+  .hero-points {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 24px;
+    margin: 40px 0 0;
+    padding: 0;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink2);
+  }
+  .hero-points li { display: flex; align-items: center; gap: 8px; }
+  .hero-points :global(svg) { width: 18px; height: 18px; color: var(--accent); }
+
+  @media (max-width: 1060px) {
+    .hero-grid { grid-template-columns: 1fr; }
+    .hero-visual { max-width: 620px; width: 100%; }
+  }
+  @media (max-width: 640px) {
+    .hero-points { flex-direction: column; gap: 10px; }
+    .hide-sm { display: none; }
+  }
+</style>
