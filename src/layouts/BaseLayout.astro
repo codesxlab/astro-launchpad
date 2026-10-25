@@ -30,6 +30,8 @@ const isHome = !noindex;
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="preload" href="/fonts/inter.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/space-grotesk.woff2" as="font" type="font/woff2" crossorigin />
+    <!-- Used in the hero demo panel; preloading it avoids a layout shift when it swaps in. -->
+    <link rel="preload" href="/fonts/jetbrains-mono.woff2" as="font" type="font/woff2" crossorigin />
     {
       isHome && (
         <Fragment>
